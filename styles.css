@@ -1,1 +1,1 @@
-
+body { font-family: Arial, sans-serif; margin:20px; .grid-numeros { display: grid; grid-template-columns: repeat 5, 50px; gap: 8px; margin-bottom: 16px; .celda { border: 1px solid #333; padding: 12px; text-align: center; cursor: pointer; border-radius: 6px; }.
