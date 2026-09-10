@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Cambia las X por tu número de teléfono real (ej. 521XXXXXXXXXX)
             const MI_TELEFONO_WHATSAPP = "5213312169240"; 
 
-                                    let urlWhatsApp = "https://wa.me" + MI_TELEFONO_WHATSAPP + "?text=" + encodeURIComponent(mensaje);
+                                    let urlWhatsApp = "https://wa.me/" + MI_TELEFONO_WHATSAPP + "?text=" + encodeURIComponent(mensaje);
             window.open(urlWhatsApp, '_blank');
 
 
