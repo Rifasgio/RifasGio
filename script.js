@@ -1,13 +1,21 @@
-// Esperamos a que la página cargue por completo
 document.addEventListener('DOMContentLoaded', () => {
-    // Seleccionamos todos los botones de números
     const boletos = document.querySelectorAll('.numero');
+    const contadorBoletos = document.getElementById('cantidad-boletos');
+    const contadorPrecio = document.getElementById('precio-total');
+    
+    const PRECIO_BOLETO = 150; // El precio por boleto que definiste
 
-    // Le añadimos la función a cada uno para que reaccione al tocarlo
     boletos.forEach(boleto => {
         boleto.addEventListener('click', () => {
-            // Al tocarlo, añade o quita la clase "seleccionado"
+            // Activa o desactiva el color verde del boleto
             boleto.classList.toggle('seleccionado');
+
+            // Cuenta cuántos boletos tienen la clase 'seleccionado' en este momento
+            const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
+
+            // Actualiza los textos en la pantalla en tiempo real
+            contadorBoletos.textContent = seleccionados;
+            contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
         });
     });
 });
