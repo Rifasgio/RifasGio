@@ -1,0 +1,98 @@
+/* Configuración general y tipografía */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Título principal */
+header h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+}
+
+/* Contenedor principal */
+main {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 450px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Sección de la imagen del premio */
+.contenedor-premio {
+    text-align: center;
+    margin-bottom: 25px;
+    background: #eef2f3;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.imagen-premio {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Información de la rifa (precios, fechas) */
+.info-rifa {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 5px solid #3498db;
+    margin-bottom: 30px;
+}
+
+.info-rifa p {
+    margin: 8px 0;
+    font-size: 1.1rem;
+}
+
+/* Contenedor del panel de números */
+.cuadrula-numeros {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Cada fila de números */
+.linea {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+/* Diseño de los boletos individuales (Círculos modernos) */
+.numero {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* Esto los hace perfectamente circulares */
+    border: 2px solid #3498db;
+    background-color: white;
+    color: #3498db;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Efecto visual al pasar el dedo o el mouse por encima */
+.numero:hover {
+    background-color: #3498db;
+    color: white;
+    transform: scale(1.1);
+}
