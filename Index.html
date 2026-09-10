@@ -1,15 +1,49 @@
-rel="stylesheet" href="style.css
-Name Rifas Gio
-title Rifas Gio
-h1 Rifas Gio
-imagen del premio aquí 
-Precio por boleto 150MXN
-Fecha del sorteo por definir
-Numeros restantes 10
-Linea1 01234
-Linea2 56789
-<div class="grid-numeros"> , 
-<div>0 1 2 3 4</div>, 
-<div>5 6 7 8 9</div>.
-</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rifas Gio</title>
+    <!-- Aquí corregimos tu línea 1 para que enlace bien el CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+    <header>
+        <h1>Rifas Gio</h1>
+    </header>
+
+    <main>
+        <!-- Imagen del premio (puedes cambiar 'premio.jpg' por el nombre real de tu foto) -->
+        <div class="contenedor-premio">
+            <img src="premio.jpg" alt="Imagen del premio" class="imagen-premio">
+        </div>
+
+        <!-- Información de la rifa -->
+        <section class="info-rifa">
+            <p><strong>Precio por boleto:</strong> 150 MXN</p>
+            <p><strong>Fecha del sorteo:</strong> Por definir</p>
+            <p><strong>Números restantes:</strong> 10</p>
+        </section>
+
+        <!-- Tu cuadrícula de números corregida y en botones para que la gente pueda interactuar -->
+        <section class="cuadrula-numeros">
+            <div class="linea">
+                <button class="numero">0</button>
+                <button class="numero">1</button>
+                <button class="numero">2</button>
+                <button class="numero">3</button>
+                <button class="numero">4</button>
+            </div>
+            <div class="linea">
+                <button class="numero">5</button>
+                <button class="numero">6</button>
+                <button class="numero">7</button>
+                <button class="numero">8</button>
+                <button class="numero">9</button>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
