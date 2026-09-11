@@ -6,13 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const contadorPrecio = document.getElementById('precio-total');
     const PRECIO_BOLETO = 150;
     
-    // === ELEMENTOS DE LA INTERFAZ PARA RECOGER DEL HTML ===
+    // === ELEMENTOS DE LA INTERFAZ ===
     const contadorRestantes = document.getElementById('numeros-restantes'); 
     const contenedorReloj = document.getElementById('temporizador-apartado'); 
 
     let tiempoLimite = null;
     let intervaloReloj = null;
-    const TOTAL_BOLETOS_RIFA = boletos.length; // Cuenta automáticamente cuántos boletos pusiste en el HTML
+    const TOTAL_BOLETOS_RIFA = boletos ? boletos.length : 10; 
 
     // === FUNCIÓN: ACTUALIZAR NÚMEROS RESTANTES ===
     function actualizarRestantes() {
@@ -25,31 +25,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // === LÓGICA: TEMPORIZADOR DE 10 MINUTOS ===
     function iniciarTemporizador() {
         if (intervaloReloj) clearInterval(intervaloReloj);
-
-        // Guardamos el momento exacto en que expira (Tiempo actual + 10 minutos)
         tiempoLimite = Date.now() + 10 * 60 * 1000;
         localStorage.setItem('rifa_expiracion', tiempoLimite);
-
         correrReloj();
     }
 
     function correrReloj() {
+        if (intervaloReloj) clearInterval(intervaloReloj);
+        
         intervaloReloj = setInterval(() => {
             const tiempoActual = Date.now();
             const diferencia = tiempoLimite - tiempoActual;
 
             if (diferencia <= 0) {
-                // El tiempo se acabó
                 clearInterval(intervaloReloj);
                 liberarBoletosPorExpiracion();
                 return;
             }
 
-            // Calcular minutos y segundos restantes
             const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
             const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
 
-            // Formatear texto estilo 09:05
             const textoMinutos = minutos < 10 ? '0' + minutos : minutos;
             const textoSegundos = segundos < 10 ? '0' + segundos : segundos;
 
@@ -61,14 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function liberarBoletosPorExpiracion() {
-        // Quita la selección de todos los boletos
-        boletos.forEach(boleto => boleto.classList.remove('seleccionado'));
+        if(boletos) {
+            boletos.forEach(boleto => boleto.classList.remove('seleccionado'));
+        }
         
-        // Reinicia los contadores a cero
-        contadorBoletos.textContent = 0;
-        contadorPrecio.textContent = 0;
+        if(contadorBoletos) contadorBoletos.textContent = 0;
+        if(contadorPrecio) contadorPrecio.textContent = 0;
         
-        // Limpia la memoria local del navegador
         localStorage.removeItem('rifa_expiracion');
         localStorage.removeItem('rifa_seleccionados');
 
@@ -80,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
         alert("Tu tiempo de 10 minutos para apartar los boletos ha expirado. Por favor, selecciónalos de nuevo.");
     }
 
-    // === GUARDAR SELECCIÓN EN MEMORIA LOCAL ===
     function guardarSeleccionEnDispositivo() {
         let numerosElegidos = [];
         document.querySelectorAll('.numero.seleccionado').forEach(boton => {
@@ -89,73 +83,75 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('rifa_seleccionados', JSON.stringify(numerosElegidos));
     }
 
-    // === COMPROBAR SI HABÍA UNA SESIÓN ACTIVA AL CARGAR LA PÁGINA ===
+    // === COMPROBAR SESIÓN ACTIVA AL CARGAR ===
     const expiracionGuardada = localStorage.getItem('rifa_expiracion');
     const seleccionadosGuardados = localStorage.getItem('rifa_seleccionados');
 
-    if (expiracionGuardada && Date.now() < expiracionGuardada && seleccionadosGuardados) {
+    if (expiracionGuardada && Date.now() < parseInt(expiracionGuardada) && seleccionadosGuardados) {
         tiempoLimite = parseInt(expiracionGuardada);
         const numerosInteresados = JSON.parse(seleccionadosGuardados);
 
-        boletos.forEach(boleto => {
-            if (numerosInteresados.includes(boleto.innerText)) {
-                boleto.classList.add('seleccionado');
-            }
-        });
+        if(boletos) {
+            boletos.forEach(boleto => {
+                if (numerosInteresados.includes(boleto.innerText)) {
+                    boleto.classList.add('seleccionado');
+                }
+            });
+        }
 
         const cantidadRecuperada = numerosInteresados.length;
-        contadorBoletos.textContent = cantidadRecuperada;
-        contadorPrecio.textContent = cantidadRecuperada * PRECIO_BOLETO;
+        if(contadorBoletos) contadorBoletos.textContent = cantidadRecuperada;
+        if(contadorPrecio) contadorPrecio.textContent = cantidadRecuperada * PRECIO_BOLETO;
         
         correrReloj(); 
     }
 
-    // Ejecución inicial para calcular los restantes del principio
     actualizarRestantes();
 
     // === EVENTO CLICK EN LOS BOLETOS ===
-    boletos.forEach(boleto => {
-        boleto.addEventListener('click', () => {
-            boleto.classList.toggle('seleccionado');
+    if(boletos) {
+        boletos.forEach(boleto => {
+            boleto.addEventListener('click', () => {
+                boleto.classList.toggle('seleccionado');
 
-            const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
+                const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
 
-            contadorBoletos.textContent = seleccionados;
-            contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
+                if(contadorBoletos) contadorBoletos.textContent = seleccionados;
+                if(contadorPrecio) contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
 
-            actualizarRestantes();
+                actualizarRestantes();
 
-            if (seleccionados > 0) {
-                if (!localStorage.getItem('rifa_expiracion')) {
-                    iniciarTemporizador();
+                if (seleccionados > 0) {
+                    if (!localStorage.getItem('rifa_expiracion')) {
+                        iniciarTemporizador();
+                    }
+                    guardarSeleccionEnDispositivo();
+                } else {
+                    if(intervaloReloj) clearInterval(intervaloReloj);
+                    localStorage.removeItem('rifa_expiracion');
+                    localStorage.removeItem('rifa_seleccionados');
+                    if (contenedorReloj) contenedorReloj.style.display = 'none';
                 }
-                guardarSeleccionEnDispositivo();
-            } else {
-                clearInterval(intervaloReloj);
-                localStorage.removeItem('rifa_expiracion');
-                localStorage.removeItem('rifa_seleccionados');
-                if (contenedorReloj) contenedorReloj.style.display = 'none';
-            }
+            });
         });
-    });
+    }
 
-    // === 2. BOTÓN DE COMPRA (CORREGIDO TOTALMENTE) ===
+    // === 2. BOTÓN DE COMPRA (MÁXIMA PROTECCIÓN) ===
     const btnComprar = document.getElementById('btn-comprar');
     if (btnComprar) {
         btnComprar.addEventListener('click', () => {
-            const cantidad = contadorBoletos.textContent;
-            const precioTotal = contadorPrecio.textContent;
+            // Obtenemos el dato directo de los elementos activos en pantalla en vez de la ID rota
+            const seleccionadosActuales = document.querySelectorAll('.numero.seleccionado');
+            const cantidad = seleccionadosActuales.length;
+            const precioTotal = cantidad * PRECIO_BOLETO;
 
-            // Se corrigió el nombre de la variable para que no se trabe el botón
-            if (parseInt(cantidad) === 0 || cantidad === "") {
+            if (cantidad === 0) {
                 alert("Por favor, selecciona al menos un boleto antes de comprar.");
                 return;
             }
 
-            const botonesSeleccionados = document.querySelectorAll('.numero.seleccionado');
             let numerosElegidos = [];
-            
-            botonesSeleccionados.forEach(boton => {
+            seleccionadosActuales.forEach(boton => {
                 numerosElegidos.push(boton.innerText);
             });
 
