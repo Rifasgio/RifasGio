@@ -18,7 +18,7 @@ boleto.classList.toggle('seleccionado');
 const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
 
 // Actualiza la pantalla
-contadorBoletos.textContent = seleccionados;
+contadorBoletos.textContent = 10 - seleccionados;
 contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
 });
 
@@ -27,14 +27,14 @@ contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
 const btnComprar = document.getElementById('btn-comprar');
 if (btnComprar) {
 btnComprar.addEventListener('click', () => {
-const cantidad = contadorBoletos.textContent;
+const cantidad = document.querySelectorAll('.numero.seleccionado').length;
+const precioTotal = contadorPrecio.textContent;
 
-const cantidad = contadorBoletos.textContent;
-
-if (parseInt(cantidad) === 0 || cantidad === "") {
+if (cantidad === 0) {
 alert("Por favor, selecciona al menos un boleto antes de comprar.");
 return;
 }
+
 
 const botonesSeleccionados = document.querySelectorAll('.numero.seleccionado');
 let numerosElegidos = [];
