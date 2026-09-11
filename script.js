@@ -21,8 +21,8 @@ const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
 // Actualiza la pantalla
 contadorBoletos.textContent = 10 - seleccionados;
 contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
+    });
 });
-
 
 // === 2. BOTÓN DE COMPRA (SEPARADO PARA NO INTERFERIR) ===
 const btnComprar = document.getElementById('btn-comprar');
