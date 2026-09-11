@@ -1,166 +1,62 @@
+
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    // === 1. LÓGICA DE SELECCIÓN Y CONFIGURACIONES ===
-    const boletos = document.querySelectorAll('.numero');
-    const contadorBoletos = document.getElementById('cantidad-boletos');
-    const contadorPrecio = document.getElementById('precio-total');
-    const PRECIO_BOLETO = 150;
+// === 1. TU LÓGICA ORIGINAL (REPARADA) ===
+// Esto hace que los boletos se pongan verdes y sumen el dinero exactamente como antes
+const boletos = document.querySelectorAll('.numero');
+const contadorBoletos = document.getElementById('cantidad-boletos');
+const contadorPrecio = document.getElementById('precio-total');
+const PRECIO_BOLETO = 150;
 
-    // Elementos de la interfaz leídos desde tu HTML
-    const contadorRestantes = document.getElementById('numeros-restantes'); 
-    const contenedorReloj = document.getElementById('temporizador-apartado'); 
+boletos.forEach(boleto => {
+boleto.addEventListener('click', () => {
+// Activa o desactiva el boleto
+boleto.classList.toggle('seleccionado');
 
-    let tiempoLimite = null;
-    let intervaloReloj = null;
-    const TOTAL_BOLETOS_RIFA = boletos ? boletos.length : 10;
+// Cuenta los seleccionados en tiempo real
+const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
 
-    // Función: Actualiza los números restantes en pantalla
-    function actualizarRestantes() {
-        const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
-        if (contadorRestantes) {
-            contadorRestantes.textContent = TOTAL_BOLETOS_RIFA - seleccionados;
-        }
-    }
+// Actualiza la pantalla
+contadorBoletos.textContent = seleccionados;
+contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
+});
+});
 
-    // Función: Activa el reloj de 10 minutos
-    function iniciarTemporizador() {
-        if (intervaloReloj) clearInterval(intervaloReloj);
-        tiempoLimite = Date.now() + 10 * 60 * 1000;
-        localStorage.setItem('rifa_expiracion', tiempoLimite);
-        correrReloj();
-    }
+// === 2. BOTÓN DE COMPRA (SEPARADO PARA NO INTERFERIR) ===
+const btnComprar = document.getElementById('btn-comprar');
+if (btnComprar) {
+btnComprar.addEventListener('click', () => {
+const cantidad = contadorBoletos.textContent;
+const precioTotal = contadorPrecio.textContent;
 
-    function correrReloj() {
-        if (intervaloReloj) clearInterval(intervaloReloj);
-        
-        intervaloReloj = setInterval(() => {
-            const tiempoActual = Date.now();
-            const diferencia = tiempoLimite - tiempoActual;
+if (parseInt(cantidad) === 0 || cantidad === "") {
+alert("Por favor, selecciona al menos un boleto antes de comprar.");
+return;
+}
 
-            if (diferencia <= 0) {
-                clearInterval(intervaloReloj);
-                liberarBoletosPorExpiracion();
-                return;
-            }
+const botonesSeleccionados = document.querySelectorAll('.numero.seleccionado');
+let numerosElegidos = [];
 
-            const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-            const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+botonesSeleccionados.forEach(boton => {
+numerosElegidos.push(boton.innerText);
+});
 
-            const textoMinutos = minutos < 10 ? '0' + minutos : minutos;
-            const textoSegundos = segundos < 10 ? '0' + segundos : segundos;
-
-            if (contenedorReloj) {
-                contenedorReloj.style.display = 'block'; 
-                contenedorReloj.innerHTML = `⚠️ Tus boletos están apartados. Tiempo restante para pagar: <b>${textoMinutos}:${textoSegundos}</b>`;
-            }
-        }, 1000);
-    }
-
-    function liberarBoletosPorExpiracion() {
-        if(boletos) {
-            boletos.forEach(boleto => boleto.classList.remove('seleccionado'));
-        }
-        if(contadorBoletos) contadorBoletos.textContent = 0;
-        if(contadorPrecio) contadorPrecio.textContent = 0;
-        
-        localStorage.removeItem('rifa_expiracion');
-        localStorage.removeItem('rifa_seleccionados');
-
-        if (contenedorReloj) {
-            contenedorReloj.innerHTML = "❌ El tiempo de apartado expiró. Los boletos se han liberado.";
-        }
-        actualizarRestantes();
-        alert("Tu tiempo de 10 minutos para apartar los boletos ha expirado. Por favor, selecciónalos de nuevo.");
-    }
-
-    function guardarSeleccionEnDispositivo() {
-        let numerosElegidos = [];
-        document.querySelectorAll('.numero.seleccionado').forEach(boton => {
-            numerosElegidos.push(boton.innerText);
-        });
-        localStorage.setItem('rifa_seleccionados', JSON.stringify(numerosElegidos));
-    }
-
-    // Comprobar si el reloj seguía activo al recargar la página
-    const expiracionGuardada = localStorage.getItem('rifa_expiracion');
-    const seleccionadosGuardados = localStorage.getItem('rifa_seleccionados');
-
-    if (expiracionGuardada && Date.now() < parseInt(expiracionGuardada) && seleccionadosGuardados) {
-        tiempoLimite = parseInt(expiracionGuardada);
-        const numerosInteresados = JSON.parse(seleccionadosGuardados);
-
-        if(boletos) {
-            boletos.forEach(boleto => {
-                if (numerosInteresados.includes(boleto.innerText)) {
-                    boleto.classList.add('seleccionado');
-                }
-            });
-        }
-        const cantidadRecuperada = numerosInteresados.length;
-        if(contadorBoletos) contadorBoletos.textContent = cantidadRecuperada;
-        if(contadorPrecio) contadorPrecio.textContent = cantidadRecuperada * PRECIO_BOLETO;
-        correrReloj(); 
-    }
-
-    // Ejecución inicial de restantes
-    actualizarRestantes();
-
-    // Evento al hacer clic en los números
-    boletos.forEach(boleto => {
-        boleto.addEventListener('click', () => {
-            boleto.classList.toggle('seleccionado');
-            const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
-
-            contadorBoletos.textContent = seleccionados;
-            contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
-
-            actualizarRestantes();
-
-            if (seleccionados > 0) {
-                if (!localStorage.getItem('rifa_expiracion')) {
-                    iniciarTemporizador();
-                }
-                guardarSeleccionEnDispositivo();
-            } else {
-                if(intervaloReloj) clearInterval(intervaloReloj);
-                localStorage.removeItem('rifa_expiracion');
-                localStorage.removeItem('rifa_seleccionados');
-                if (contenedorReloj) contenedorReloj.style.display = 'none';
-            }
-        });
-    });
-
-    // === 2. BOTÓN DE COMPRA CON ENLACE API SEGURO ===
-    const btnComprar = document.getElementById('btn-comprar');
-    if (btnComprar) {
-        btnComprar.addEventListener('click', () => {
-            const cantidad = contadorBoletos.textContent;
-            const precioTotal = contadorPrecio.textContent;
-
-            if (parseInt(cantidad) === 0 || cantidad === "") {
-                alert("Por favor, selecciona al menos un boleto antes de comprar.");
-                return;
-            }
-
-            const botonesSeleccionados = document.querySelectorAll('.numero.seleccionado');
-            let numerosElegidos = [];
-
-            botonesSeleccionados.forEach(boton => {
-                numerosElegidos.push(boton.innerText);
-            });
-
-            // Mensaje formateado de forma segura con comillas invertidas
-            let mensaje = `¡Hola! Quiero comprar boletos para la rifa.
-*Boletos seleccionados:* ${numerosElegidos.join(', ')}
-*Cantidad:* ${cantidad}
-*Total a pagar:* $${precioTotal} MXN
+let mensaje = ¡Hola! Quiero comprar boletos para la rifa. *Boletos seleccionados:* ${numerosElegidos.join(', ')}
+Cantidad: `${cantidad}
+Total a pagar: $${precioTotal} MXN
 
 ¿Me compartes tus datos de transferencia para realizar el pago?`;
 
-            // Enlace directo absoluto y verificado para tu número: 523312169240
-            let urlWhatsApp = "https://whatsapp.com" + encodeURIComponent(mensaje);
-            
-            window.open(urlWhatsApp, '_blank');
-        });
-    }
+// Cambia las X por tu número de teléfono real (ej. 521XXXXXXXXXX)
+const MI_TELEFONO_WHATSAPP = "5213312169240";
+
+let urlWhatsApp = "https://wa.me/" + MI_TELEFONO_WHATSAPP + "?text=" + encodeURIComponent(mensaje);
+window.open(urlWhatsApp, '_blank');
+
+window.open(urlWhatsApp, '_blank');
+
+
+});
+}
 });
