@@ -32,7 +32,6 @@ const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
 // Actualiza la pantalla
 contadorBoletos.textContent = seleccionados;
 contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
-    document.getElementById('numeros-restantes').textContent = 10 - numerosVendidos.length - seleccionados;
 
     });
 });
