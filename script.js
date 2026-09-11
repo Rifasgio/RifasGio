@@ -47,7 +47,7 @@ numerosElegidos.push(boton.innerText);
                 let mensaje = "¡Hola! Quiero comprar boletos para la rifa.\n" +
                           "*Boletos seleccionados:* " + numerosElegidos.join(', ') + "\n" +
                           "*Cantidad:* " + cantidad + "\n" +
-                          "*Total a pagar:* $" + precioTotal + " MXN\n\n"
+                          "*Total a pagar:* $" + precioTotal + " MXN\n\n" +
                    "¿Me compartes tus datos de transferencia para realizar el pago?";
 
 // Cambia las X por tu número de teléfono real (ej. 521XXXXXXXXXX)
