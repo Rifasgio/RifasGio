@@ -19,7 +19,7 @@ const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
 
 
 // Actualiza la pantalla
-contadorBoletos.textContent = 10 - seleccionados;
+contadorBoletos.textContent = seleccionados;
 contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
     });
 });
