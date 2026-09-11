@@ -6,6 +6,26 @@
 <title>Rifas Gio</title>
 <!-- Aquí corregimos tu línea 1 para que enlace bien el CSS -->
 <link rel="stylesheet" href="style.css">
+<style>
+.comprar-btn {
+    background-color: #25D366;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 14px 30px;
+    border: none;
+    border-radius: 50px;
+    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+    cursor: pointer;
+    transition: transform 0.2s;
+    width: 90%;
+    max-width: 320px;
+}
+.comprar-btn:active {
+    transform: scale(0.95);
+}
+</style>
+
 </head>
 <body>
 
@@ -49,8 +69,11 @@
 </div>
 </section>
 <!-- Botón de compra agregado -->
-<div class="contenedor-compra">
-<button id="btn-comprar" class="btn-comprar">Comprar Boletos</button>
+<div style="text-align: center; margin-top: 20px; width: 100%;">
+    <button id="btn-comprar" class="comprar-btn">💬 ¡Comprar Boletos ahora!</button>
+    <p style="color: #666; font-size: 13px; margin-top: 10px; font-family: sans-serif; padding: 0 10px;">
+        🔒 <strong>Compra 100% segura:</strong> Tu boleto se valida directamente en nuestro WhatsApp oficial.
+    </p>
 </div>
 </main>
 <script src="script.js"></script>
