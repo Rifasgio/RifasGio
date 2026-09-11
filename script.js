@@ -1,20 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // === 1. LÓGICA DE SELECCIÓN Y CONFIGURACIONES ===
+    // === 1. TU LÓGICA ORIGINAL (CON NUEVOS CONTADORES) ===
     const boletos = document.querySelectorAll('.numero');
     const contadorBoletos = document.getElementById('cantidad-boletos');
     const contadorPrecio = document.getElementById('precio-total');
     const PRECIO_BOLETO = 150;
-    
-    // === ELEMENTOS DE LA INTERFAZ ===
+
+    // Nuevas etiquetas de interfaz que lee de tu HTML
     const contadorRestantes = document.getElementById('numeros-restantes'); 
     const contenedorReloj = document.getElementById('temporizador-apartado'); 
 
     let tiempoLimite = null;
     let intervaloReloj = null;
-    const TOTAL_BOLETOS_RIFA = boletos ? boletos.length : 10; 
+    const TOTAL_BOLETOS_RIFA = boletos ? boletos.length : 10;
 
-    // === FUNCIÓN: ACTUALIZAR NÚMEROS RESTANTES ===
+    // Función nueva: Actualiza los números restantes en pantalla
     function actualizarRestantes() {
         const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
         if (contadorRestantes) {
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // === LÓGICA: TEMPORIZADOR DE 10 MINUTOS ===
+    // Función nueva: Activa el reloj de 10 minutos
     function iniciarTemporizador() {
         if (intervaloReloj) clearInterval(intervaloReloj);
         tiempoLimite = Date.now() + 10 * 60 * 1000;
@@ -60,7 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if(boletos) {
             boletos.forEach(boleto => boleto.classList.remove('seleccionado'));
         }
-        
         if(contadorBoletos) contadorBoletos.textContent = 0;
         if(contadorPrecio) contadorPrecio.textContent = 0;
         
@@ -70,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (contenedorReloj) {
             contenedorReloj.innerHTML = "❌ El tiempo de apartado expiró. Los boletos se han liberado.";
         }
-        
         actualizarRestantes();
         alert("Tu tiempo de 10 minutos para apartar los boletos ha expirado. Por favor, selecciónalos de nuevo.");
     }
@@ -83,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('rifa_seleccionados', JSON.stringify(numerosElegidos));
     }
 
-    // === COMPROBAR SESIÓN ACTIVA AL CARGAR ===
+    // Comprobar si el reloj seguía activo al recargar la página
     const expiracionGuardada = localStorage.getItem('rifa_expiracion');
     const seleccionadosGuardados = localStorage.getItem('rifa_seleccionados');
 
@@ -98,59 +96,57 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-
         const cantidadRecuperada = numerosInteresados.length;
         if(contadorBoletos) contadorBoletos.textContent = cantidadRecuperada;
         if(contadorPrecio) contadorPrecio.textContent = cantidadRecuperada * PRECIO_BOLETO;
-        
         correrReloj(); 
     }
 
+    // Ejecución inicial de restantes
     actualizarRestantes();
 
-    // === EVENTO CLICK EN LOS BOLETOS ===
-    if(boletos) {
-        boletos.forEach(boleto => {
-            boleto.addEventListener('click', () => {
-                boleto.classList.toggle('seleccionado');
+    // Evento original tuyo al hacer clic en los números
+    boletos.forEach(boleto => {
+        boleto.addEventListener('click', () => {
+            boleto.classList.toggle('seleccionado');
+            const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
 
-                const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
+            contadorBoletos.textContent = seleccionados;
+            contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
 
-                if(contadorBoletos) contadorBoletos.textContent = seleccionados;
-                if(contadorPrecio) contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
+            // Manejo automático de restantes y reloj
+            actualizarRestantes();
 
-                actualizarRestantes();
-
-                if (seleccionados > 0) {
-                    if (!localStorage.getItem('rifa_expiracion')) {
-                        iniciarTemporizador();
-                    }
-                    guardarSeleccionEnDispositivo();
-                } else {
-                    if(intervaloReloj) clearInterval(intervaloReloj);
-                    localStorage.removeItem('rifa_expiracion');
-                    localStorage.removeItem('rifa_seleccionados');
-                    if (contenedorReloj) contenedorReloj.style.display = 'none';
+            if (seleccionados > 0) {
+                if (!localStorage.getItem('rifa_expiracion')) {
+                    iniciarTemporizador();
                 }
-            });
+                guardarSeleccionEnDispositivo();
+            } else {
+                if(intervaloReloj) clearInterval(intervaloReloj);
+                localStorage.removeItem('rifa_expiracion');
+                localStorage.removeItem('rifa_seleccionados');
+                if (contenedorReloj) contenedorReloj.style.display = 'none';
+            }
         });
-    }
+    });
 
-    // === 2. BOTÓN DE COMPRA CON ENLACE DE API SEGURO ===
+    // === 2. TU BOTÓN DE COMPRA ORIGINAL (CON ENLACE SEGURO Y TU NUEVO NÚMERO) ===
     const btnComprar = document.getElementById('btn-comprar');
     if (btnComprar) {
         btnComprar.addEventListener('click', () => {
-            const seleccionadosActuales = document.querySelectorAll('.numero.seleccionado');
-            const cantidad = seleccionadosActuales.length;
-            const precioTotal = cantidad * PRECIO_BOLETO;
+            const cantidad = contadorBoletos.textContent;
+            const precioTotal = contadorPrecio.textContent;
 
-            if (cantidad === 0) {
+            if (parseInt(cantidad) === 0 || cantidad === "") {
                 alert("Por favor, selecciona al menos un boleto antes de comprar.");
                 return;
             }
 
+            const botonesSeleccionados = document.querySelectorAll('.numero.seleccionado');
             let numerosElegidos = [];
-            seleccionadosActuales.forEach(boton => {
+
+            botonesSeleccionados.forEach(boton => {
                 numerosElegidos.push(boton.innerText);
             });
 
@@ -161,10 +157,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ¿Me compartes tus datos de transferencia para realizar el pago?`;
 
-            // ENLACE TOTALMENTE REESTRUCTURADO: Formato API seguro con tu número 523312169240
-            let urlWhatsApp = "https://whatsapp.com" + encodeURIComponent(mensaje);
+            // Enlace seguro de WhatsApp corregido con tu número 3312169240 y lada 52
+            const codigoPais = "52";
+            const celRifas = "3312169240";
+            let urlWhatsApp = "https://whatsapp.com" + codigoPais + celRifas + "&text=" + encodeURIComponent(mensaje);
             
-            window.open(urlWhatsApp, '_blank'); 
+            // Un solo window.open para que no te duplique pestañas
+            window.open(urlWhatsApp, '_blank');
         });
     }
 });
