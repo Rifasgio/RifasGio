@@ -8,7 +8,7 @@ const boletos = document.querySelectorAll('.numero');
 const contadorBoletos = document.getElementById('cantidad-boletos');
 const contadorPrecio = document.getElementById('precio-total');
 const PRECIO_BOLETO = 150;
-const numerosVendidos = []; 
+const numerosVendidos = [5,8]; 
 
 boletos.forEach(boleto => {
     const numeroBoleto = parseInt(boleto.innerText);
