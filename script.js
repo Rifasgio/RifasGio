@@ -42,11 +42,11 @@ botonesSeleccionados.forEach(boton => {
 numerosElegidos.push(boton.innerText);
 });
 
-let mensaje = ¡Hola! Quiero comprar boletos para la rifa. *Boletos seleccionados:* ${numerosElegidos.join(', ')}
-Cantidad: `${cantidad}
-Total a pagar: $${precioTotal} MXN
-
-¿Me compartes tus datos de transferencia para realizar el pago?`;
+                let mensaje = "¡Hola! Quiero comprar boletos para la rifa.\n" +
+                          "*Boletos seleccionados:* " + numerosElegidos.join(', ') + "\n" +
+                          "*Cantidad:* " + cantidad + "\n" +
+                          "*Total a pagar:* $" + precioTotal + " MXN\n\n"
+                   "¿Me compartes tus datos de transferencia para realizar el pago?";
 
 // Cambia las X por tu número de teléfono real (ej. 521XXXXXXXXXX)
 const MI_TELEFONO_WHATSAPP = "5213312169240";
@@ -54,7 +54,6 @@ const MI_TELEFONO_WHATSAPP = "5213312169240";
 let urlWhatsApp = "https://wa.me/" + MI_TELEFONO_WHATSAPP + "?text=" + encodeURIComponent(mensaje);
 window.open(urlWhatsApp, '_blank');
 
-window.open(urlWhatsApp, '_blank');
 
 
 });
