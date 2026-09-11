@@ -1,32 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // === 1. TU LÓGICA ORIGINAL Y CONFIGURACIONES ===
+    // === 1. LÓGICA DE SELECCIÓN Y CONFIGURACIONES ===
     const boletos = document.querySelectorAll('.numero');
     const contadorBoletos = document.getElementById('cantidad-boletos');
     const contadorPrecio = document.getElementById('precio-total');
     const PRECIO_BOLETO = 150;
     
-    // === NUEVOS ELEMENTOS DE LA INTERFAZ ===
-    // Asegúrate de agregar estas id en tu HTML si quieres que se muestren los textos
+    // === ELEMENTOS DE LA INTERFAZ PARA RECOGER DEL HTML ===
     const contadorRestantes = document.getElementById('numeros-restantes'); 
     const contenedorReloj = document.getElementById('temporizador-apartado'); 
 
     let tiempoLimite = null;
     let intervaloReloj = null;
-    const TOTAL_BOLETOS_RIFA = boletos.length; // Cuenta cuántos boletos pusiste en el HTML
+    const TOTAL_BOLETOS_RIFA = boletos.length; // Cuenta automáticamente cuántos boletos pusiste en el HTML
 
-    // === NUEVA FUNCIÓN: ACTUALIZAR NÚMEROS RESTANTES ===
+    // === FUNCIÓN: ACTUALIZAR NÚMEROS RESTANTES ===
     function actualizarRestantes() {
         const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
-        // Si en el futuro integras Firebase, aquí restarías también los boletos comprados de la BD
         if (contadorRestantes) {
             contadorRestantes.textContent = TOTAL_BOLETOS_RIFA - seleccionados;
         }
     }
 
-    // === NUEVA LÓGICA: TEMPORIZADOR DE 10 MINUTOS ===
+    // === LÓGICA: TEMPORIZADOR DE 10 MINUTOS ===
     function iniciarTemporizador() {
-        // Si ya hay un reloj corriendo, lo limpiamos para no duplicarlo
         if (intervaloReloj) clearInterval(intervaloReloj);
 
         // Guardamos el momento exacto en que expira (Tiempo actual + 10 minutos)
@@ -42,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const diferencia = tiempoLimite - tiempoActual;
 
             if (diferencia <= 0) {
-                // ¡El tiempo se acabó!
+                // El tiempo se acabó
                 clearInterval(intervaloReloj);
                 liberarBoletosPorExpiracion();
                 return;
@@ -57,21 +54,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const textoSegundos = segundos < 10 ? '0' + segundos : segundos;
 
             if (contenedorReloj) {
-                contenedorReloj.style.display = 'block'; // Muestra el contenedor
+                contenedorReloj.style.display = 'block'; 
                 contenedorReloj.innerHTML = `⚠️ Tus boletos están apartados. Tiempo restante para pagar: <b>${textoMinutos}:${textoSegundos}</b>`;
             }
         }, 1000);
     }
 
     function liberarBoletosPorExpiracion() {
-        // Quita la selección visual de todos los boletos
+        // Quita la selección de todos los boletos
         boletos.forEach(boleto => boleto.classList.remove('seleccionado'));
         
         // Reinicia los contadores a cero
         contadorBoletos.textContent = 0;
         contadorPrecio.textContent = 0;
         
-        // Limpia la memoria local
+        // Limpia la memoria local del navegador
         localStorage.removeItem('rifa_expiracion');
         localStorage.removeItem('rifa_seleccionados');
 
@@ -97,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const seleccionadosGuardados = localStorage.getItem('rifa_seleccionados');
 
     if (expiracionGuardada && Date.now() < expiracionGuardada && seleccionadosGuardados) {
-        // Si el tiempo no ha expirado, recuperamos los boletos que el usuario ya tenía verdes
         tiempoLimite = parseInt(expiracionGuardada);
         const numerosInteresados = JSON.parse(seleccionadosGuardados);
 
@@ -107,17 +103,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Actualizamos textos basándonos en lo recuperado
         const cantidadRecuperada = numerosInteresados.length;
         contadorBoletos.textContent = cantidadRecuperada;
         contadorPrecio.textContent = cantidadRecuperada * PRECIO_BOLETO;
         
-        correrReloj(); // Seguimos contando desde donde se quedó
+        correrReloj(); 
     }
 
     // Ejecución inicial para calcular los restantes del principio
     actualizarRestantes();
-
 
     // === EVENTO CLICK EN LOS BOLETOS ===
     boletos.forEach(boleto => {
@@ -129,17 +123,14 @@ document.addEventListener('DOMContentLoaded', () => {
             contadorBoletos.textContent = seleccionados;
             contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
 
-            // Al dar clic, calculamos los números restantes en pantalla
             actualizarRestantes();
 
             if (seleccionados > 0) {
-                // Si selecciona al menos uno y no hay reloj activo, arranca los 10 minutos
                 if (!localStorage.getItem('rifa_expiracion')) {
                     iniciarTemporizador();
                 }
                 guardarSeleccionEnDispositivo();
             } else {
-                // Si deseleccionó todos los boletos manualmente, borramos el reloj
                 clearInterval(intervaloReloj);
                 localStorage.removeItem('rifa_expiracion');
                 localStorage.removeItem('rifa_seleccionados');
@@ -148,14 +139,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // === 2. BOTÓN DE COMPRA (CORREGIDO EL DOBLE WINDOW.OPEN) ===
+    // === 2. BOTÓN DE COMPRA (CORREGIDO TOTALMENTE) ===
     const btnComprar = document.getElementById('btn-comprar');
     if (btnComprar) {
         btnComprar.addEventListener('click', () => {
             const cantidad = contadorBoletos.textContent;
             const precioTotal = contadorPrecio.textContent;
 
-            if (parseInt(cantidad) === 0 || quantity === "") {
+            // Se corrigió el nombre de la variable para que no se trabe el botón
+            if (parseInt(cantidad) === 0 || cantidad === "") {
                 alert("Por favor, selecciona al menos un boleto antes de comprar.");
                 return;
             }
@@ -175,9 +167,8 @@ document.addEventListener('DOMContentLoaded', () => {
 ¿Me compartes tus datos de transferencia para realizar el pago?`;
 
             const MI_TELEFONO_WHATSAPP = "5213312169240"; 
-            let urlWhatsApp = "https://wa.me/" + MI_TELEFONO_WHATSAPP + "?text=" + encodeURIComponent(mensaje);
+            let urlWhatsApp = "https://wa.me" + MI_TELEFONO_WHATSAPP + "?text=" + encodeURIComponent(mensaje);
             
-            // Nota: Se eliminó el segundo window.open que tenías repetido para evitar que abriera dos pestañas de WhatsApp al mismo tiempo
             window.open(urlWhatsApp, '_blank'); 
         });
     }
