@@ -8,6 +8,17 @@ const boletos = document.querySelectorAll('.numero');
 const contadorBoletos = document.getElementById('cantidad-boletos');
 const contadorPrecio = document.getElementById('precio-total');
 const PRECIO_BOLETO = 150;
+const numerosVendidos = []; 
+
+boletos.forEach(boleto => {
+    const numeroBoleto = parseInt(boleto.innerText);
+    if (numerosVendidos.includes(numeroBoleto)) {
+        boleto.style.backgroundColor = '#ff4d4d'; 
+        boleto.style.color = 'white';             
+        boleto.style.pointerEvents = 'none';      
+        boleto.innerText = 'X';                   
+    }
+});
 
 boletos.forEach(boleto => {
 boleto.addEventListener('click', () => {
@@ -21,6 +32,8 @@ const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
 // Actualiza la pantalla
 contadorBoletos.textContent = seleccionados;
 contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
+    document.getElementById('numeros-restantes').textContent = 10 - numerosVendidos.length - seleccionados;
+
     });
 });
 
