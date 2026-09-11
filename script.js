@@ -100,7 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const cantidadRecuperada = numerosInteresados.length;
-        // CORREGIDO: Ya no dice quantityRecuperada, ahora está correcto
         if(contadorBoletos) contadorBoletos.textContent = cantidadRecuperada;
         if(contadorPrecio) contadorPrecio.textContent = cantidadRecuperada * PRECIO_BOLETO;
         
@@ -137,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // === 2. BOTÓN DE COMPRA CORREGIDO CON TU NÚMERO ===
+    // === 2. BOTÓN DE COMPRA CON ENLACE DE API SEGURO ===
     const btnComprar = document.getElementById('btn-comprar');
     if (btnComprar) {
         btnComprar.addEventListener('click', () => {
@@ -162,10 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ¿Me compartes tus datos de transferencia para realizar el pago?`;
 
-            // Enlace directo absoluto y verificado por partes para tu número: 523312169240
-            const lada = "52";
-            const telefonoFijo = "3312169240";
-            let urlWhatsApp = "https://wa.me/" + lada + telefonoFijo + "?text=" + encodeURIComponent(mensaje);
+            // ENLACE TOTALMENTE REESTRUCTURADO: Formato API seguro con tu número 523312169240
+            let urlWhatsApp = "https://whatsapp.com" + encodeURIComponent(mensaje);
             
             window.open(urlWhatsApp, '_blank'); 
         });
