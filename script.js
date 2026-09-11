@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Enlace directo absoluto y verificado por partes para tu número: 523312169240
             const lada = "52";
             const telefonoFijo = "3312169240";
-            let urlWhatsApp = "https://wa.me" + lada + telefonoFijo + "?text=" + encodeURIComponent(mensaje);
+            let urlWhatsApp = "https://wa.me/" + lada + telefonoFijo + "?text=" + encodeURIComponent(mensaje);
             
             window.open(urlWhatsApp, '_blank'); 
         });
