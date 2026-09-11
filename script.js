@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // === 1. TU LÓGICA ORIGINAL (CON NUEVOS CONTADORES) ===
+    // === 1. LÓGICA DE SELECCIÓN Y CONFIGURACIONES ===
     const boletos = document.querySelectorAll('.numero');
     const contadorBoletos = document.getElementById('cantidad-boletos');
     const contadorPrecio = document.getElementById('precio-total');
     const PRECIO_BOLETO = 150;
 
-    // Nuevas etiquetas de interfaz que lee de tu HTML
+    // Elementos de la interfaz leídos desde tu HTML
     const contadorRestantes = document.getElementById('numeros-restantes'); 
     const contenedorReloj = document.getElementById('temporizador-apartado'); 
 
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let intervaloReloj = null;
     const TOTAL_BOLETOS_RIFA = boletos ? boletos.length : 10;
 
-    // Función nueva: Actualiza los números restantes en pantalla
+    // Función: Actualiza los números restantes en pantalla
     function actualizarRestantes() {
         const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
         if (contadorRestantes) {
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Función nueva: Activa el reloj de 10 minutos
+    // Función: Activa el reloj de 10 minutos
     function iniciarTemporizador() {
         if (intervaloReloj) clearInterval(intervaloReloj);
         tiempoLimite = Date.now() + 10 * 60 * 1000;
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Ejecución inicial de restantes
     actualizarRestantes();
 
-    // Evento original tuyo al hacer clic en los números
+    // Evento al hacer clic en los números
     boletos.forEach(boleto => {
         boleto.addEventListener('click', () => {
             boleto.classList.toggle('seleccionado');
@@ -114,7 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
             contadorBoletos.textContent = seleccionados;
             contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
 
-            // Manejo automático de restantes y reloj
             actualizarRestantes();
 
             if (seleccionados > 0) {
@@ -131,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // === 2. TU BOTÓN DE COMPRA ORIGINAL (CON ENLACE SEGURO Y TU NUEVO NÚMERO) ===
+    // === 2. BOTÓN DE COMPRA CON ENLACE API SEGURO ===
     const btnComprar = document.getElementById('btn-comprar');
     if (btnComprar) {
         btnComprar.addEventListener('click', () => {
@@ -150,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 numerosElegidos.push(boton.innerText);
             });
 
+            // Mensaje formateado de forma segura con comillas invertidas
             let mensaje = `¡Hola! Quiero comprar boletos para la rifa.
 *Boletos seleccionados:* ${numerosElegidos.join(', ')}
 *Cantidad:* ${cantidad}
@@ -157,12 +157,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ¿Me compartes tus datos de transferencia para realizar el pago?`;
 
-            // Enlace seguro de WhatsApp corregido con tu número 3312169240 y lada 52
-            const codigoPais = "52";
-            const celRifas = "3312169240";
-            let urlWhatsApp = "https://whatsapp.com" + codigoPais + celRifas + "&text=" + encodeURIComponent(mensaje);
+            // Enlace directo absoluto y verificado para tu número: 523312169240
+            let urlWhatsApp = "https://whatsapp.com" + encodeURIComponent(mensaje);
             
-            // Un solo window.open para que no te duplique pestañas
             window.open(urlWhatsApp, '_blank');
         });
     }
