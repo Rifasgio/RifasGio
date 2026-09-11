@@ -43,24 +43,31 @@ btnComprar.addEventListener('click', () => {
 const cantidad = document.querySelectorAll('.numero.seleccionado').length;
 const precioTotal = contadorPrecio.textContent;
 
-if (cantidad === 0) {
-alert("Por favor, selecciona al menos un boleto antes de comprar.");
-return;
-}
+    const nombreCliente = document.getElementById('nombre-comprador').value.trim();
 
+    if (nombreCliente === "") {
+        alert("Por favor, ingresa tu nombre completo antes de continuar.");
+        return;
+    }
 
-const botonesSeleccionados = document.querySelectorAll('.numero.seleccionado');
-let numerosElegidos = [];
+    if (cantidad === 0) {
+        alert("Por favor, selecciona al menos un boleto antes de comprar.");
+        return;
+    }
 
-botonesSeleccionados.forEach(boton => {
-numerosElegidos.push(boton.innerText);
-});
+    const botonesSeleccionados = document.querySelectorAll('.numero.seleccionado');
+    let numerosElegidos = [];
 
-                let mensaje = "¡Hola! Quiero comprar boletos para la rifa.\n" +
-                          "*Boletos seleccionados:* " + numerosElegidos.join(', ') + "\n" +
-                          "*Cantidad:* " + cantidad + "\n" +
-                          "*Total a pagar:* $" + precioTotal + " MXN\n\n" +
-                   "¿Me compartes tus datos de transferencia para realizar el pago?";
+    botonesSeleccionados.forEach(boton => {
+        numerosElegidos.push(boton.innerText);
+    });
+
+    let mensaje = "¡Hola! Mi nombre es *" + nombreCliente + "* y quiero comprar boletos para la rifa.\n" +
+                  "*Boletos seleccionados:* " + numerosElegidos.join(', ') + "\n" +
+                  "*Cantidad:* " + cantidad + "\n" +
+                  "*Total a pagar:* $" + precioTotal + " MXN\n\n" +
+                  "¿Me compartes tus datos de transferencia para realizar el pago?";
+
 
 // Cambia las X por tu número de teléfono real (ej. 521XXXXXXXXXX)
 const MI_TELEFONO_WHATSAPP = "5213312169240";
