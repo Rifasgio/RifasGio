@@ -18,16 +18,18 @@ boleto.classList.toggle('seleccionado');
 const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
 
 // Actualiza la pantalla
-contadorBoletos.textContent = 10 - seleccionados;
+contadorBoletos.textContent = seleccionados;
 contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
+});
+
 
 // === 2. BOTÓN DE COMPRA (SEPARADO PARA NO INTERFERIR) ===
 const btnComprar = document.getElementById('btn-comprar');
 if (btnComprar) {
 btnComprar.addEventListener('click', () => {
-const cantidad = document.querySelectorAll('.numero.seleccionado').length;
+const cantidad = contadorBoletos.textContent;
 
-const precioTotal = contadorPrecio.textContent;
+const cantidad = contadorBoletos.textContent;
 
 if (parseInt(cantidad) === 0 || cantidad === "") {
 alert("Por favor, selecciona al menos un boleto antes de comprar.");
