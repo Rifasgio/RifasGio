@@ -17,6 +17,7 @@ boleto.classList.toggle('seleccionado');
 // Cuenta los seleccionados en tiempo real
 const seleccionados = document.querySelectorAll('.numero.seleccionado').length;
 
+
 // Actualiza la pantalla
 contadorBoletos.textContent = 10 - seleccionados;
 contadorPrecio.textContent = seleccionados * PRECIO_BOLETO;
